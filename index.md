@@ -1,37 +1,181 @@
-## Welcome to GitHub Pages
+## Get it
 
-You can use the [editor on GitHub](https://github.com/FANMixco/Xamarin-SmoothBottomBar/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+|  Package  |Latest Release|
+|:----------|:------------:|
+|**Xamarin-SmoothBottomBar**|[![NuGet Badge Xamarin-MaterialSearchBar](https://buildstats.info/nuget/Xamarin-SmoothBottomBar)](https://www.nuget.org/packages/Xamarin-SmoothBottomBar/)|
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## GIF
 
-### Markdown
+<img src="https://cdn.dribbble.com/users/1015191/screenshots/6251784/snapp---animation.gif"/>
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Design Credits
 
-```markdown
-Syntax highlighted code block
+All design and inspiration credits belong to [Alejandro Ausejo](https://dribbble.com/shots/6251784-Navigation-Menu-Animation).
 
-# Header 1
-## Header 2
-### Header 3
+## Usage
 
-- Bulleted
-- List
+-   Create menu.xml under your res/menu/ folder
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-1. Numbered
-2. List
+    <item
+        android:id="@+id/item0"
+        android:title="@string/menu_dashboard"
+        android:icon="@drawable/ic_dashboard_white_24dp"/>
 
-**Bold** and _Italic_ and `Code` text
+    <item
+        android:id="@+id/item1"
+        android:title="@string/menu_leaderboard"
+        android:icon="@drawable/ic_multiline_chart_white_24dp"/>
 
-[Link](url) and ![Image](src)
+    <item
+        android:id="@+id/item2"
+        android:title="@string/menu_store"
+        android:icon="@drawable/ic_store_white_24dp"/>
+
+    <item
+        android:id="@+id/item3"
+        android:title="@string/menu_profile"
+        android:icon="@drawable/ic_person_outline_white_24dp"/>
+
+</menu>
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+-   Add view into your layout file
+```xml
+<me.ibrahimsn.lib.SmoothBottomBar
+    android:id="@+id/bottomBar"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    app:backgroundColor="@color/colorPrimary"
+    app:menu="@menu/menu_bottom"/>
+```
 
-### Jekyll Themes
+## **Use SmoothBottomBar with [Navigation Components](https://developer.android.com/guide/navigation/).**
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/FANMixco/Xamarin-SmoothBottomBar/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Coupled with the Navigation Component from the [Android Jetpack](https://developer.android.com/jetpack), SmoothBottomBar offers easier navigation within your application by designating navigation to the Navigation Component. This works best when using fragments, as the Navigation component helps to handle your fragment transactions.
 
-### Support or Contact
+- Setup Navigation Component i.e. Add dependenccy to your project, create a Navigation Graph etc.
+- For each Fragment in your Navigation Graph, ensure that the Fragment's `id` is the same as the MenuItems in your Menu i.e res/menu/ folder
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+    <item
+        android:id="@+id/first_fragment"
+        android:title="@string/menu_dashboard"
+        android:icon="@drawable/ic_dashboard_white_24dp"/>
+
+    <item
+        android:id="@+id/second_fragment"
+        android:title="@string/menu_leaderboard"
+        android:icon="@drawable/ic_multiline_chart_white_24dp"/>
+
+    <item
+        android:id="@+id/third_fragment"
+        android:title="@string/menu_store"
+        android:icon="@drawable/ic_store_white_24dp"/>
+
+    <item
+        android:id="@+id/fourth_fragment"
+        android:title="@string/menu_profile"
+        android:icon="@drawable/ic_person_outline_white_24dp"/>
+
+</menu>
+```
+
+Navigation Graph i.e res/navigation/ folder
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/first_fragment">
+
+    <fragment
+        android:id="@+id/first_fragment"
+        android:name="[YOUR_NAMESPACE].FirstFragment"
+        android:label="First Fragment"
+        tools:layout="@layout/fragment_first" />
+    <fragment
+        android:id="@+id/second_fragment"
+        android:name="[YOUR_NAMESPACE].SecondFragment"
+        android:label="Second Fragment"
+        tools:layout="@layout/fragment_second" />
+    <fragment
+        android:id="@+id/third_fragment"
+        android:name="[YOUR_NAMESPACE].ThirdFragment"
+        android:label="Third Fragment"
+        tools:layout="@layout/fragment_third" />
+    <fragment
+        android:id="@+id/fourth_fragment"
+        android:name="[YOUR_NAMESPACE].FourthFragment"
+        android:label="Fourth Fragment"
+        tools:layout="@layout/fragment_fourth" />
+</navigation>
+```
+
+- In your activity i.e `MainActivity`, override `onCreateOptionsMenu`, get a reference to your SmoothBottomBar and call `setupWithNavController()` which takes in a `Menu` and `NavController` on the SmoothBottomBar.
+```csharp
+public override bool OnCreateOptionsMenu(IMenu menu)
+{
+	MenuInflater.Inflate(Resource.Menu.menu_bottom, menu);
+	if (menu != null)
+	{
+		BottomBar.SetupWithNavController(menu, NavController);
+	}
+
+	return true;
+}
+```
+- You can also setup your `ActionBar` with the Navigation Component
+```csharp
+private NavController NavController;
+private SmoothBottomBar BottomBar;
+protected override void OnCreate(Bundle savedInstanceState)
+{
+	try
+	{
+		base.OnCreate(savedInstanceState);
+		Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+		// Set our view from the "main" layout resource
+		SetContentView(Resource.Layout.activity_main);
+		BottomBar = FindViewById<SmoothBottomBar>(Resource.Id.bottomBar);
+		NavController = Navigation.FindNavController(this, Resource.Id.main_fragment);
+	}
+	catch (System.Exception ex)
+	{
+
+	}
+}
+```
+
+### Result:
+
+<p align="center"><a><img src="https://github.com/mayokunthefirst/SmoothBottomBar/blob/navigation-component-dev/GIF/smooth_bar_gif.gif?raw=true" width="300"></a></p>
+
+
+## Customization
+
+```xml
+<me.ibrahimsn.lib.SmoothBottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:menu=""
+        app:backgroundColor=""
+        app:indicatorColor=""
+        app:indicatorRadius=""
+        app:sideMargins=""
+        app:itemPadding=""
+        app:textColor=""
+        app:itemFontFamily=""
+        app:textSize=""
+        app:iconSize=""
+        app:iconTint=""
+        app:iconTintActive=""
+        app:activeItem=""
+        app:duration="" />
+```
