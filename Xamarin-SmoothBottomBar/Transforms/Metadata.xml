@@ -6,4 +6,8 @@
   This sample removes the method: android.support.v4.content.CursorLoader.loadInBackground:
   <remove-node path="/api/package[@name='android.support.v4.content']/class[@name='CursorLoader']/method[@name='loadInBackground']" />
   -->
+  <add-node path="/api/package[@name='me.ibrahimsn.lib']">
+  <class abstract="false" deprecated="not deprecated" final="false" name="AccessibleExploreByTouchHelper" static="true" visibility="public" extends="java.lang.Object">
+  </class>
+</add-node>
 </metadata>
